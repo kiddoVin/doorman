@@ -2,6 +2,7 @@ import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
 import SignUpModal from 'flarum/forum/components/SignUpModal';
 import Stream from 'flarum/common/utils/Stream';
+import addInviteCode from './inviteCode';
 
 app.initializers.add('fof-doorman', () => {
   extend(SignUpModal.prototype, 'oninit', function () {
@@ -10,7 +11,7 @@ app.initializers.add('fof-doorman', () => {
   extend(SignUpModal.prototype, 'fields', function (fields) {
     const isOptional = JSON.parse(app.forum.data.attributes['fof-doorman.allowPublic']);
     let placeholder = app.translator.trans('fof-doorman.forum.sign_up.doorman_placeholder');
-    if (isOptional) {
+    if (isOptional) {      placeholder = app.translator.trans('fof-doorman.forum.sign_up.doorman_placeholder_optional');
       placeholder = app.translator.trans('fof-doorman.forum.sign_up.doorman_placeholder_optional');
     }
     fields.add(
@@ -26,4 +27,6 @@ app.initializers.add('fof-doorman', () => {
     newData['fof-doorkey'] = this.doorkey;
     return newData;
   });
+
+  // addInviteCode();
 });

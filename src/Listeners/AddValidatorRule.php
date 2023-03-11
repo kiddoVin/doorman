@@ -32,19 +32,32 @@ class AddValidatorRule
         $validator->addExtension(
             'doorkey',
             function ($attribute, $value, $parameters) {
-                $doorkey = Doorkey::where('key', $value)->first();
+
+                $doorkeyText = trim($value);
 
                 // Allows the invitation key to be optional if the setting was enabled
                 $allow = json_decode($this->settings->get('fof-doorman.allowPublic'));
-                if ($allow && !$doorkey) {
-                    return;
+
+                $hasDoorkey = false;
+                if ($doorkeyText != ""){
+                    $hasDoorkey = true;
                 }
 
-                if ($doorkey !== null && ($doorkey->max_uses === 0 || $doorkey->uses < $doorkey->max_uses)) {
-                    return true;
-                } else {
-                    return false;
+                if (!$hasDoorkey) {
+                    return $allow ? true : false;
                 }
+
+                $doorkey = null;
+                $doorkey = Doorkey::where('key', $doorkeyText)->first();
+                if (!$doorkey) {
+                    return $allow ? true : false;
+                }
+
+                if ($doorkey->max_uses === 0 || $doorkey->uses < $doorkey->max_uses) {
+                    return true;
+                } 
+
+                return false;
             }
         );
     }

@@ -17,7 +17,7 @@ fof-doorman:
       invalid_doorkey: The invite code your entered is invalid.
       doorkey_required: Please enter an invite code.
       doorman_placeholder: Invite Code
-      doorman_placeholder_optional: Invite Code (optional)
+      doorman_placeholder_optional: Invite Code / User Name (optional)
 
   admin:
     modal:

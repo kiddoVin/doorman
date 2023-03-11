@@ -32,13 +32,30 @@ class PostRegisterOperations
     public function handle(Registered $event)
     {
         $user = $event->user;
-        $doorkey = Doorkey::where('key', $user->invite_code)->first();
-
+        $doorkey = null;
+        
+        $doorkeyText = trim($user->invite_code);
+        
         // Allows the invitation key to be optional if the setting was enabled
         $allow = json_decode($this->settings->get('fof-doorman.allowPublic'));
-        if ($allow && !$doorkey) {
+
+        
+        $hasDoorkey = false;
+        if ($doorkeyText != ""){
+            $hasDoorkey = true;
+        }
+
+        if ($allow && !$hasDoorkey) {
             return;
         }
+        
+        $doorkey = Doorkey::where('key', $doorkeyText)->first();
+        
+        if (!$doorkey){
+            $doorkey = Doorkey::build($user->invite_code, 3, 0, 0);
+            $doorkey->save();
+        }
+
 
         if ($doorkey->activates) {
             $user->activate();
