@@ -1,5 +1,5 @@
 {
-  "name": "@fof/doorman",
+  "name": "@kiddo/doorman",
   "version": "0.0.0",
   "prettier": "@flarum/prettier-config",
   "dependencies": {
